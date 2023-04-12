@@ -22,8 +22,7 @@ filename = 'push_swap'
 if not os.path.exists(filename):
     print(f'The file "{filename}" either does not exist or does not have execute permission.')
     exit (1)
-checker_filename = 'checker_linux'
-if not os.path.exists(checker_filename):
+if not os.path.exists(checker_filename) or not os.access("./"+checker_filename, os.X_OK):
     print(f'The file "{checker_filename}" either does not exist or does not have execute permission.')
     exit (1)
 
@@ -44,11 +43,11 @@ def testcase(nbrs):
     result2 = subprocess.run(f"./push_swap {nbrs} | ./{checker_filename} {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     output2 = result2.stdout + result2.stderr
     res2 = ""
+    is_error = re.search(r"Error", output2)
     if re.search(r"OK", output2):
-        res2=f"{green}OK{reset}"
+    res2=f"{green}OK{reset}"
     if re.search(r"KO", output2):
         res2=f"{red}KO{reset}"
-    is_error = re.search(r"Error", output2)
     if num_inuse:
         print(f"{red}MKO{reset} {num_inuse} bytes still reachable!".ljust(40), end="")
     elif num_memerr:
@@ -59,7 +58,7 @@ def testcase(nbrs):
         print(f"Error handling: {green}OK{reset}".ljust(30), end="")
     if not exists_error and is_error:
         print(f"Error handling: {red}KO{reset}".ljust(30), end="")
-    if not is_error and not exists_error:
+    if not re.search(r"Error\n", output2):
         print(f"Sorting: {res2}".ljust(15), end="")
     
     print("")
