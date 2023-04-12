@@ -52,7 +52,7 @@ def testcase(nbrs):
         num_inuse = re.search(r"total\s+(\d+)\s+bytes\s+leaked", output)
         num_memerr = 0
     
-    print(f"{yellow}[Numbers]:{reset} {nbrs.ljust(40)}", end="")
+    print(f"Numbers: {yellow}{nbrs.ljust(40)}{reset}",end=" ")
     result3 = subprocess.run(f"./push_swap {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     output3 = result3.stdout + result3.stderr
     exists_error = re.search(r"Error\n", output3)
@@ -65,28 +65,28 @@ def testcase(nbrs):
     if re.search(r"KO", output2):
         res2=f"{red}KO{reset}"
     if num_inuse:
-        print(f"{red}MKO{reset} {num_inuse} bytes still reachable!".ljust(40), end="")
+        print(f"{red}MKO: {reset} {num_inuse} bytes still reachable!".ljust(40), end="")
     elif num_memerr:
-        print(f"{red}MKO{reset} {num_memerr} memory errors!".ljust(40), end="")
+        print(f"{red}MKO: {reset} {num_memerr} memory errors!".ljust(40), end="")
     else:
         print(f"Memory: {green}OK{reset}".ljust(40), end="")
     if exists_error and is_error:
-        print(f"Error handling: {green}OK{reset}".ljust(30), end="")
+        print(f" Error handling: {green}OK{reset}".ljust(30), end="")
     elif not exists_error and is_error:
-        print(f"Error handling: {red}KO{reset}".ljust(30), end="")
+        print(f" Error handling: {red}KO{reset}".ljust(30), end="")
     if "Error\n" not in output2:
-        print(f"Sorting: {res2}".ljust(15), end="")
-    
-    
+        print(f" Sorting: {res2}".ljust(15), end="")     
     print("")
 
-testcase("  ")
+testcase("")
 testcase(" ")
 testcase("-")
 testcase("+")
+testcase("6")
+testcase("6 4")
 testcase("a 3 2")
 testcase("4 4 6")
-testcase("6 4 4")
+testcase("6 -1 4")
 testcase("4 6 4")
 testcase("6 3 4")
 testcase("4 6 3")
@@ -99,4 +99,4 @@ testcase("9 8 7 6 5 4 3 2 1 0")
 testcase("5 3 1 2 4 6")
 testcase("2147483649 2147483649 2147483649")
 testcase("2 2 2 2 2 2 2")
-testcase("10 9 8 7 6 5 4 3 2 1 0")
+testcase("10 9 8 7  1 4 3 2 0")
