@@ -47,15 +47,16 @@ def testcase(nbrs):
     if re.search(r"KO", output2):
         res2=f"{red}KO{reset}"
     is_error = re.search(r"Error", output2)
-    
     if num_inuse:
         print(f"{red}MKO{reset} {num_inuse} bytes still reachable!".ljust(40), end="")
     elif num_memerr:
         print(f"{red}MKO{reset} {num_memerr} memory errors!".ljust(40), end="")
     else:
         print(f"Memory: {green}OK{reset}".ljust(40), end="")
-    if exists_error:
+    if exists_error and is_error:
         print(f"Error handling: {green}OK{reset}".ljust(30), end="")
+    if not exists_error and is_error:
+        print(f"Error handling: {red}KO{reset}".ljust(30), end="")
     if not is_error and not exists_error:
         print(f"Sorting: {res2}".ljust(15), end="")
     
@@ -75,6 +76,7 @@ testcase("4 6 3")
 testcase("4 6 3u")
 testcase("4 6- 3")
 testcase("2147483647 -2147483648")
+testcase("2147483648 -2147483649")
 testcase("0 1 2 3 4 5 6 7 8 9")
 testcase("9 8 7 6 5 4 3 2 1 0")
 testcase("5 3 1 2 4 6")
