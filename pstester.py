@@ -28,17 +28,24 @@ if not os.path.exists(checker_filename) or not os.access("./"+checker_filename, 
 
 
 def testcase(nbrs):
-    result = subprocess.run(["timeout", "10", "./push_swap", nbrs], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if current_os == 'Linux':
+        result = subprocess.run(["valgrind", "--leak-check=full", "./push_swap", nbrs], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output = result.stderr.decode()
+        memory_usage = re.search(r"in use at exit: (\d+) bytes in", output)
+        memory_errors = re.search(r"ERROR SUMMARY: (\d+) errors", output)
+        num_inuse = 0
+        if memory_usage:
+            num_inuse = int(memory_usage.group(1))
+        num_memerr = 0
+        if memory_errors:
+            num_memerr = int(memory_errors.group(1))
+    elif current_os == 'Darwin':  # macOS
+        result = subprocess.run(["leaks", "./push_swap", nbrs], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output = result.stdout.decode()
+        num_inuse = re.search(r"total\s+(\d+)\s+bytes\s+leaked", output)
+        num_memerr = 0
+    
     print(f"{yellow}[Numbers]:{reset} {nbrs.ljust(40)}", end="")
-    output = result.stderr.decode()
-    memory_usage = re.search(r"in use at exit: (\d+) bytes in", output)
-    memory_errors = re.search(r"ERROR SUMMARY: (\d+) errors", output)
-    num_inuse = None  # Initialize to None instead of 0
-    if memory_usage:
-        num_inuse = memory_usage.group(1)  # Assign the matched string to num_inuse
-    num_memerr = 0
-    if memory_errors:
-        num_memerr = int(memory_errors.group(1))
     exists_error = re.search(r"Error\n", output)
     result2 = subprocess.run(f"./push_swap {nbrs} | ./{checker_filename} {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     output2 = result2.stdout + result2.stderr
@@ -48,8 +55,8 @@ def testcase(nbrs):
         res2=f"{green}OK{reset}"
     if re.search(r"KO", output2):
         res2=f"{red}KO{reset}"
-    if num_inuse is not None:  # Check if num_inuse is not None before calling group()
-        print(f"{red}MKO{reset} {num_inuse} bytes still reachable!".ljust(40), end="")
+    if num_inuse:
+        print(f"{red}MKO{reset} {num_inuse.group(1)} bytes still reachable!".ljust(40), end="")
     elif num_memerr:
         print(f"{red}MKO{reset} {num_memerr} memory errors!".ljust(40), end="")
     else:
@@ -60,6 +67,7 @@ def testcase(nbrs):
         print(f"Error handling: {red}KO{reset}".ljust(30), end="")
     if not re.search(r"Error\n", output2):
         print(f"Sorting: {res2}".ljust(15), end="")
+    
     print("")
 
 
