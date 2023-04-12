@@ -30,7 +30,8 @@ if not os.path.exists(checker_filename) or not os.access("./"+checker_filename, 
 def testcase(nbrs):
     if current_os == 'Linux':
         result = subprocess.run(["valgrind", "--leak-check=full", "./push_swap", nbrs], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = result.stderr.decode()
+        output = result.stderr + result.stdout
+        output = output.decode()
         memory_usage = re.search(r"in use at exit: (\d+) bytes in", output)
         memory_errors = re.search(r"ERROR SUMMARY: (\d+) errors", output)
         num_inuse = 0
@@ -41,14 +42,17 @@ def testcase(nbrs):
             num_memerr = int(memory_errors.group(1))
     elif current_os == 'Darwin':  # macOS
         result = subprocess.run(["leaks", "./push_swap", nbrs], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = result.stdout.decode()
+        output = result.stdout + result.stderr
+        output = output.decode();print(output)
         num_inuse = re.search(r"total\s+(\d+)\s+bytes\s+leaked", output)
         num_memerr = 0
     
     print(f"{yellow}[Numbers]:{reset} {nbrs.ljust(40)}", end="")
-    exists_error = re.search(r"Error\n", output)
+    result3 = subprocess.run(f"./push_swap {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    output3 = result3.stdout + result3.stderr
+    exists_error = re.search(r"Error\n", output3)
     result2 = subprocess.run(f"./push_swap {nbrs} | ./{checker_filename} {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-    output2 = result2.stdout + result2.stderr
+    output2 = ""; output2 = result2.stdout + result2.stderr
     res2 = ""
     is_error = re.search(r"Error", output2)
     if re.search(r"OK", output2):
@@ -73,7 +77,7 @@ def testcase(nbrs):
 
 
 
-testcase("")
+testcase("  ")
 testcase(" ")
 testcase("-")
 testcase("+")
@@ -93,4 +97,3 @@ testcase("5 3 1 2 4 6")
 testcase("2147483649 2147483649 2147483649")
 testcase("2 2 2 2 2 2 2")
 testcase("10 9 8 7 6 5 4 3 2 1 0")
-
