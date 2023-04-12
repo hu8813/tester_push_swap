@@ -13,6 +13,10 @@ elif current_os == 'Darwin':  # macOS
     checker_filename = 'checker_Mac'
 print(f'Current OS: {current_os}')
 print(f'Checker filename: {checker_filename}')
+if current_os == 'Darwin':
+    print("Memory Leak check is supported on Linux only. Skipping memory leak check on macOS.")
+    print(f'You are using macOS. Please make sure you have installed the "leaks" command.')
+    print(f'You can install it by running "brew install valgrind" in your terminal.')
 yellow = "\033[1;33m"
 green = "\033[1;32m"
 red = "\033[1;31m"
