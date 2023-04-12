@@ -6,24 +6,24 @@ import platform
 
 # Get the current operating system
 current_os = platform.system()
-
 # Set the checker filename based on the operating system
 if current_os == 'Linux':
     checker_filename = 'checker_linux'
 elif current_os == 'Darwin':  # macOS
     checker_filename = 'checker_Mac'
-    
+print(f'Current OS: {current_os}')
+print(f'Checker filename: {checker_filename}')
 yellow = "\033[1;33m"
 green = "\033[1;32m"
 red = "\033[1;31m"
 reset = "\033[0;0m"
 
 filename = 'push_swap'
-if not os.path.exists(filename) and os.access(filename, os.X_OK):
+if not os.path.exists(filename):
     print(f'The file "{filename}" either does not exist or does not have execute permission.')
     exit (1)
 checker_filename = 'checker_linux'
-if not os.path.exists(checker_filename) and os.access(checker_filename, os.X_OK):
+if not os.path.exists(checker_filename) or os.access(checker_filename, os.X_OK):
     print(f'The file "{checker_filename}" either does not exist or does not have execute permission.')
     exit (1)
 
@@ -34,8 +34,10 @@ def testcase(nbrs):
     output = result.stderr.decode()
     memory_usage = re.search(r"in use at exit: (\d+) bytes in", output)
     memory_errors = re.search(r"ERROR SUMMARY: (\d+) errors", output)
+    num_inuse = 0
     if memory_usage:
         num_inuse = int(memory_usage.group(1))
+    num_memerr = 0
     if memory_errors:
         num_memerr = int(memory_errors.group(1))
     exists_error = re.search(r"Error\n", output)
