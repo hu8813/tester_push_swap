@@ -17,6 +17,7 @@ if current_os == 'Darwin':
     print("Memory Leak check is supported on Linux only. Skipping memory leak check on macOS.")
     print(f'You are using macOS. Please make sure you have installed the "leaks" command.')
     print(f'You can install it by running "brew install valgrind" in your terminal.')
+    print(f'If you do not have Homebrew installed, you can install it by running "/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"')
 yellow = "\033[1;33m"
 green = "\033[1;32m"
 red = "\033[1;31m"
