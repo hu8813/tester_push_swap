@@ -23,7 +23,7 @@ if not os.path.exists(filename):
     print(f'The file "{filename}" either does not exist or does not have execute permission.')
     exit (1)
 checker_filename = 'checker_linux'
-if not os.path.exists(checker_filename) or os.access(checker_filename, os.X_OK):
+if not os.path.exists(checker_filename):
     print(f'The file "{checker_filename}" either does not exist or does not have execute permission.')
     exit (1)
 
