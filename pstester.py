@@ -43,7 +43,7 @@ def testcase(nbrs):
     elif current_os == 'Darwin':  # macOS
         result = subprocess.run(["leaks", "./push_swap", nbrs], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output = result.stdout + result.stderr
-        output = output.decode();print(output)
+        output = output.decode()
         num_inuse = re.search(r"total\s+(\d+)\s+bytes\s+leaked", output)
         num_memerr = 0
     
