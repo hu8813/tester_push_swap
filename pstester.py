@@ -23,9 +23,12 @@ reset = "\033[0;0m"
 filename = 'push_swap'
 if not os.path.exists(filename):
     print(f'The file "{filename}" either does not exist or does not have execute permission.')
+    print(f'Please run make and put the file in the same folder')
     exit (1)
 if not os.path.exists(checker_filename) or not os.access("./"+checker_filename, os.X_OK):
     print(f'The file "{checker_filename}" either does not exist or does not have execute permission.')
+    print("Please download it from https://projects.intra.42.fr/42cursus-push_swap/mine")
+    print(f"and give it execute permission (chmod +x {checker_filename})")
     exit (1)
 
 
