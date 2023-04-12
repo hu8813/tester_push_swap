@@ -45,7 +45,7 @@ def testcase(nbrs):
     res2 = ""
     is_error = re.search(r"Error", output2)
     if re.search(r"OK", output2):
-    res2=f"{green}OK{reset}"
+        res2=f"{green}OK{reset}"
     if re.search(r"KO", output2):
         res2=f"{red}KO{reset}"
     if num_inuse:
