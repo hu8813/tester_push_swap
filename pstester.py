@@ -69,15 +69,13 @@ def testcase(nbrs):
         print(f"Memory: {green}OK{reset}".ljust(40), end="")
     if exists_error and is_error:
         print(f"Error handling: {green}OK{reset}".ljust(30), end="")
-    if not exists_error and is_error:
+    elif not exists_error and is_error:
         print(f"Error handling: {red}KO{reset}".ljust(30), end="")
-    if not re.search(r"Error\n", output2):
+    if "Error\n" not in output2:
         print(f"Sorting: {res2}".ljust(15), end="")
     
+    
     print("")
-
-
-
 
 testcase("  ")
 testcase(" ")
