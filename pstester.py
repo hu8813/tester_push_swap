@@ -62,7 +62,7 @@ def testcase(nbrs):
     if re.search(r"KO", output2):
         res2=f"{red}KO{reset}"
     if num_inuse:
-        print(f"{red}MKO{reset} {num_inuse.group(1)} bytes still reachable!".ljust(40), end="")
+        print(f"{red}MKO{reset} {num_inuse} bytes still reachable!".ljust(40), end="")
     elif num_memerr:
         print(f"{red}MKO{reset} {num_memerr} memory errors!".ljust(40), end="")
     else:
