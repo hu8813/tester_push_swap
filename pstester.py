@@ -121,7 +121,7 @@ for i in range(100):
         nbrs += str(random.randint(-2147483648, 2147483647)) + " "
 testcase(nbrs)
 
-print("Testing with 500 numbers...")
+print("Testing with 500 random numbers...")
 random.seed(42)
 for i in range(500):
     nbrs = ""
