@@ -3,6 +3,7 @@ import subprocess
 import re
 import os
 import platform
+import random
 
 # Get the current operating system
 current_os = platform.system()
@@ -92,11 +93,38 @@ testcase("6 3 4")
 testcase("4 6 3")
 testcase("4 6 3u")
 testcase("4 6- 3")
+testcase("9 8 7 -6")
 testcase("2147483647 -2147483648")
 testcase("2147483648 -2147483649")
 testcase("0 1 2 3 4 5 6 7 8 9")
-testcase("9 8 7 6 5 4 3 2 1 0")
 testcase("5 3 1 2 4 6")
 testcase("2147483649 2147483649 2147483649")
-testcase("2 2 2 2 2 2 2")
+testcase("2 22 12 +0")
+testcase("2 22 12 -0")
+testcase("2 22 0 +0")
+testcase("2 22 0 -0")
 testcase("10 9 8 7  1 4 3 2 0")
+
+print("Testing with 5 random numbers...")
+random.seed(42)
+for i in range(5):
+    nbrs = ""
+    for j in range(5):
+        nbrs += str(random.randint(-2147483648, 2147483647)) + " "
+testcase(nbrs)
+
+print("Testing with 100 random numbers...")
+random.seed(42)
+for i in range(100):
+    nbrs = ""
+    for j in range(100):
+        nbrs += str(random.randint(-2147483648, 2147483647)) + " "
+testcase(nbrs)
+
+print("Testing with 500 numbers...")
+random.seed(42)
+for i in range(500):
+    nbrs = ""
+    for j in range(500):
+        nbrs += str(random.randint(-2147483648, 2147483647)) + " "
+testcase(nbrs)
