@@ -7,6 +7,7 @@ import random
 
 # Get the current operating system
 current_os = platform.system()
+timeout_duration = 1
 # Set the checker filename based on the operating system
 if current_os == 'Linux':
     checker_filename = 'checker_linux'
@@ -34,10 +35,11 @@ if not os.path.exists(checker_filename) or not os.access("./"+checker_filename, 
 
 
 def testcase(nbrs):
+    segfault = ""
     if current_os == 'Linux':
-        result = subprocess.run(["valgrind", "--leak-check=full", "./push_swap", nbrs], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.run(["timeout", str(timeout_duration), "valgrind", "--leak-check=full", "./push_swap", nbrs], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         output = result.stderr + result.stdout
-        output = output.decode()
+        #output = output.decode()
         memory_usage = re.search(r"in use at exit: (\d+) bytes in", output)
         memory_errors = re.search(r"ERROR SUMMARY: (\d+) errors", output)
         num_inuse = 0
@@ -46,29 +48,35 @@ def testcase(nbrs):
         num_memerr = 0
         if memory_errors:
             num_memerr = int(memory_errors.group(1))
+        result3 = subprocess.run(f"./push_swap {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        result2 = subprocess.run(f"./push_swap {nbrs} | ./{checker_filename} {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        if "Segmentation fault" in result3.stderr or "Segmentation fault" in result2.stdout:
+            segfault = f"{red}SegFault!{reset}"
     elif current_os == 'Darwin':  # macOS
         result = subprocess.run(["leaks", "./push_swap", nbrs], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output = result.stdout + result.stderr
         output = output.decode()
         num_inuse = re.search(r"total\s+(\d+)\s+bytes\s+leaked", output)
         num_memerr = 0
-    
-    print(f"Numbers: {yellow}{nbrs.ljust(40)}{reset}",end=" ")
-    result3 = subprocess.run(f"./push_swap {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        result3 = subprocess.run(f"./push_swap {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        result2 = subprocess.run(f"./push_swap {nbrs} | ./{checker_filename} {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+
+    print(f"Numbers: {yellow}{nbrs.ljust(40)}{reset}", end=" ")
     output3 = result3.stdout + result3.stderr
     exists_error = re.search(r"Error\n", output3)
-    result2 = subprocess.run(f"./push_swap {nbrs} | ./{checker_filename} {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     output2 = ""; output2 = result2.stdout + result2.stderr
     res2 = ""
     is_error = re.search(r"Error", output2)
-    if re.search(r"OK", output2):
+    if "OK" in str(output2):
         res2=f"{green}OK{reset}"
-    if re.search(r"KO", output2):
+    if "KO" in str(output2):
         res2=f"{red}KO{reset}"
+    if len(segfault):
+        print(f"{segfault}".ljust(15), end=" ")
     if num_inuse:
-        print(f"{red}MKO: {reset} {num_inuse} bytes still reachable!".ljust(40), end="")
+        print(f"{red}MKO: {reset} {num_inuse} byte(s) still reachable!".ljust(40), end="")
     elif num_memerr:
-        print(f"{red}MKO: {reset} {num_memerr} memory errors!".ljust(40), end="")
+        print(f"{red}MKO: {reset} {num_memerr} memory error(s)!".ljust(40), end="")
     else:
         print(f"Memory: {green}OK{reset}".ljust(40), end="")
     if exists_error and is_error:
@@ -105,26 +113,15 @@ testcase("2 22 0 +0")
 testcase("2 22 0 -0")
 testcase("10 9 8 7  1 4 3 2 0")
 
-print("Testing with 5 random numbers...")
-random.seed(42)
-for i in range(5):
-    nbrs = ""
-    for j in range(5):
-        nbrs += str(random.randint(-2147483648, 2147483647)) + " "
-testcase(nbrs)
+def test_with_random_numbers(num_random_numbers):
+    random.seed(42)
+    nbrs_set = set()
+    while len(nbrs_set) < num_random_numbers:
+        nbrs_set.add(random.randint(-2147483648, 2147483647))
+    nbrs = " ".join(str(n) for n in nbrs_set)
+    print(f"Testing with {num_random_numbers} random numbers...")
+    testcase(nbrs)
 
-print("Testing with 100 random numbers...")
-random.seed(42)
-for i in range(100):
-    nbrs = ""
-    for j in range(100):
-        nbrs += str(random.randint(-2147483648, 2147483647)) + " "
-testcase(nbrs)
-
-print("Testing with 500 random numbers...")
-random.seed(42)
-for i in range(500):
-    nbrs = ""
-    for j in range(500):
-        nbrs += str(random.randint(-2147483648, 2147483647)) + " "
-testcase(nbrs)
+test_with_random_numbers(5)
+test_with_random_numbers(100)
+test_with_random_numbers(500)
