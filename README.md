@@ -6,6 +6,11 @@ To use it, in the directory where your ./push_swap and checker programs are, run
 
 ```
 pip install test-push-swap
+```
+
+then
+
+```
 test_push_swap
 ```
 
