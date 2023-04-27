@@ -8,7 +8,7 @@ To use it, in the directory where your ./push_swap and checker programs are, run
 pip install test-push-swap
 ```
 
-then
+after installation, you can run it anywhere using following command:
 
 ```
 test_push_swap
