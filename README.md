@@ -21,14 +21,14 @@ curl https://raw.githubusercontent.com/hu8813/tester_push_swap/main/pstester.py 
 ```
 
 # Uninstall
-If you installed via pip and want to uninstall it: 
+If you have installed via pip and want to uninstall it: 
 
 ```
 pip uninstall test-push-swap -y
 ```
 
-# Screenshot of a test result
+# Screenshot of a Test Result
 
 ![Push_swap tester screenshot](screenshot.png)
 
-It works well with valgrind on Linux, but may not check memory on Mac.
+It works well with Valgrind on Linux, but will NOT check Memory on Mac.
