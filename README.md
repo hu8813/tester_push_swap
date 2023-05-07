@@ -27,6 +27,8 @@ If you installed via pip and want to uninstall it:
 pip uninstall test-push-swap -y
 ```
 
+# Screenshot of a test result
+
 ![Push_swap tester screenshot](screenshot.png)
 
 It works well with valgrind on Linux, but may not check memory on Mac.
