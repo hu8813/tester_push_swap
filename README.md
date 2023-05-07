@@ -20,6 +20,13 @@ OR (without need to install python package), just run:
 curl https://raw.githubusercontent.com/hu8813/tester_push_swap/main/pstester.py | python3 -
 ```
 
+# Uninstall
+If you installed via pip and want to uninstall it: 
+
+```
+pip uninstall test-push-swap -y
+```
+
 ![Push_swap tester screenshot](screenshot.png)
 
 It works well with valgrind on Linux, but may not check memory on Mac.
