@@ -2,7 +2,7 @@
 A Python script that tests memory leaks, errors, and error handling for push_swap. 
 
 # Usage
-To use it, just run: 
+Run following command: (in the directory where your ./push_swap and checker_(linux or mac) programs are) 
 
 ```
 curl https://raw.githubusercontent.com/hu8813/tester_push_swap/main/pstester.py | python3 -
@@ -15,8 +15,6 @@ OR you can install python package:
 ```
 pip install test-push-swap
 ```
-then, in the directory where your ./push_swap and checker programs are, run following command:
-
 ```
 test_push_swap
 ```
