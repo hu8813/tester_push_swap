@@ -1,5 +1,5 @@
 # tester_push_swap
-A Python script that tests memory leaks, errors, and error handling for push_swap. 
+A Python script for Linux & macOS that tests memory leaks, errors, and error handling for push_swap. 
 
 # Usage
 Run following command: (in the directory where your ./push_swap and checker_(linux or mac) programs are) 
@@ -29,4 +29,3 @@ pip uninstall test-push-swap -y
 
 ![Push_swap tester screenshot](screenshot.png)
 
-It works well with Valgrind on Linux, but will NOT check Memory on Mac.
