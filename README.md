@@ -1,5 +1,5 @@
 # tester_push_swap
-A Python script for Linux & macOS that tests memory leaks, errors, and error handling for push_swap. 
+A Python script for Linux & macOS that tests memory leaks, errors and error handling for push_swap. 
 
 # Usage
 Run following command: (in the directory where your ./push_swap and checker_(linux or mac) programs are) 
