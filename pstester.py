@@ -4,6 +4,7 @@ import re
 import os
 import platform
 import random
+import tempfile
 
 # Get the current operating system
 current_os = platform.system()
@@ -15,8 +16,8 @@ elif current_os == 'Darwin':  # macOS
     checker_filename = 'checker_Mac'
 print(f'Current OS: {current_os}')
 print(f'Checker filename: {checker_filename}')
-if current_os == 'Darwin':
-    print("*** Memory Leak check is supported on Linux only. Skipping memory leak check on macOS. ***")
+#if current_os == 'Darwin':
+    #print("*** Memory Leak check is supported on Linux only. Skipping memory leak check on macOS. ***")
 yellow = "\033[1;33m"
 green = "\033[1;32m"
 red = "\033[1;31m"
@@ -53,10 +54,23 @@ def testcase(nbrs):
         if "Segmentation fault" in result3.stderr or "Segmentation fault" in result2.stdout:
             segfault = f"{red}SegFault!{reset}"
     elif current_os == 'Darwin':  # macOS
-        result = subprocess.run(["leaks", "./push_swap", nbrs], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = result.stdout + result.stderr
-        output = output.decode()
-        num_inuse = re.search(r"total\s+(\d+)\s+bytes\s+leaked", output)
+        output= ""
+        with tempfile.TemporaryFile() as temp_file:
+            result = subprocess.run(["leaks" ,"-q","-atExit", "--", "./push_swap", nbrs],   stdout=temp_file, stderr=subprocess.DEVNULL, timeout=5)
+            temp_file.seek(0)
+            output = temp_file.read().decode().rstrip()
+        #print(result)
+        #output = result.stdout.decode().rstrip()
+        #output = output.decode()
+        #print(output)
+        #exit(1)
+        pattern = r"(\d+)\s+total leaked bytes"
+        match = re.search(pattern, output)
+        num_inuse = 0
+        if match:
+            num_inuse = int(match.group(1))
+        else:
+            num_inuse = 0
         num_memerr = 0
         result3 = subprocess.run(f"./push_swap {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         result2 = subprocess.run(f"./push_swap {nbrs} | ./{checker_filename} {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
