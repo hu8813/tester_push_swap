@@ -102,6 +102,7 @@ def testcase(nbrs):
     print("")
 
 testcase("\"\"")
+testcase("\" \"")
 testcase("")
 testcase(" ")
 testcase("-")
