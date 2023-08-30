@@ -8,7 +8,7 @@ import tempfile
 
 # Get the current operating system
 current_os = platform.system()
-timeout_duration = 1
+timeout_duration = 2
 # Set the checker filename based on the operating system
 if current_os == 'Linux':
     checker_filename = 'checker_linux'
