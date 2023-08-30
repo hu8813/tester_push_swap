@@ -6,6 +6,7 @@ import platform
 import random
 import tempfile
 
+testnbr=0
 # Get the current operating system
 current_os = platform.system()
 timeout_duration = 2
@@ -36,6 +37,8 @@ if not os.path.exists(checker_filename) or not os.access("./"+checker_filename, 
 
 
 def testcase(nbrs):
+    global testnbr
+    testnbr += 1
     segfault = ""
     if current_os == 'Linux':
         result = subprocess.run(["timeout", str(timeout_duration), "valgrind", "--leak-check=full", "./push_swap", nbrs], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
@@ -75,7 +78,7 @@ def testcase(nbrs):
         result3 = subprocess.run(f"./push_swap {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         result2 = subprocess.run(f"./push_swap {nbrs} | ./{checker_filename} {nbrs}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 
-    print(f"Numbers: {yellow}{nbrs.ljust(40)}{reset}", end=" ")
+    print(f"#{str(testnbr).rjust(2)} {yellow}{nbrs.ljust(40)}{reset}", end=" ")
     output3 = result3.stdout + result3.stderr
     exists_error = re.search(r"Error\n", output3)
     output2 = ""; output2 = result2.stdout + result2.stderr
