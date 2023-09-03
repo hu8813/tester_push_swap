@@ -14,22 +14,6 @@ curl https://raw.githubusercontent.com/hu8813/tester_push_swap/main/pstester.py 
 This command will download and execute the pstester.py script from the GitHub repository.
 
 
-Alternatively, you can also install the tester_push_swap Python package:
-
-
-```
-pip install test-push-swap
-```
-```
-test_push_swap
-```
-# Uninstall
-If you have installed via pip and want to uninstall it: 
-
-```
-pip uninstall test-push-swap -y
-```
-
 # Screenshot of a Test Result
 
 ![Push_swap tester screenshot](screenshot.png)
